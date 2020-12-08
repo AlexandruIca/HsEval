@@ -3,6 +3,8 @@ module Parser
     rpn,
     interpret,
     evalPostfix,
+    RPNResult,
+    InterpreterResult,
   )
 where
 

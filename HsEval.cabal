@@ -54,6 +54,7 @@ test-suite HsEval-test
   main-is: Spec.hs
   other-modules:
       TokenizerTest
+      RPNTest
       Paths_HsEval
   hs-source-dirs:
       test
