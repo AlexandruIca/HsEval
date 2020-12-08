@@ -50,7 +50,7 @@ tokenizerTests :: [TestTree]
 tokenizerTests = map toTestTree tests
   where
     filterInput :: String -> String
-    filterInput s = filter (\c -> not (elem c " \n\r\t")) s
+    filterInput s = filter (`notElem` " \n\r\t") s
 
     makeTokenList :: TokenizerResult -> [Token] -> [(Token, Token)]
     makeTokenList (Left tokens) expectedTokens = zip tokens expectedTokens
