@@ -37,7 +37,16 @@ rpnTests = map toTestTree tests
     isEq (s, tokens) = all (uncurry (==)) (makeResult (rpn . tokenize $ s) tokens)
 
     assertMsg :: String -> [Token] -> String
-    assertMsg s expected = "`rpn` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (rpn . tokenize $ s)
+    assertMsg s expected =
+      "`rpn` failed for '"
+        ++ s
+        ++ "'\n\t\t expected: "
+        ++ show expected
+        ++ "\n\t\t output: "
+        ++ show (rpn . tokenize $ s)
 
     toTestTree :: (String, [Token]) -> TestTree
-    toTestTree input = testCase ("RPN[" ++ filterInput (fst input) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
+    toTestTree input =
+      testCase
+        ("RPN[" ++ filterInput (fst input) ++ "]")
+        (assertBool (uncurry assertMsg input) (isEq input))

@@ -36,7 +36,16 @@ evalPostfixTests = map toTestTree tests
     isEq (s, result) = uncurry (==) (makeResult (evalPostfix s) result)
 
     assertMsg :: String -> Double -> String
-    assertMsg s expected = "`evalPostfix` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (evalPostfix s)
+    assertMsg s expected =
+      "`evalPostfix` failed for '"
+        ++ s
+        ++ "'\n\t\t expected: "
+        ++ show expected
+        ++ "\n\t\t output: "
+        ++ show (evalPostfix s)
 
     toTestTree :: (String, Double) -> TestTree
-    toTestTree input = testCase ("EvalPostfix[" ++ filterInput (fst input) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
+    toTestTree input =
+      testCase
+        ("EvalPostfix[" ++ filterInput (fst input) ++ "]")
+        (assertBool (uncurry assertMsg input) (isEq input))
