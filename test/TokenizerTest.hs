@@ -10,7 +10,6 @@ import Tokenizer
 tests :: [(String, [Token])]
 tests =
     [
-    ("(", [RParen]),
     ("", []),
     ("  ", []),
     ("+", [Plus]),
@@ -37,8 +36,8 @@ tokenizerTests = map toTestTree tests
         isEq :: (String, [Token]) -> Bool
         isEq (s, tokens) = and $ map (\(a, b) -> a == b) (zip (tokenize s) tokens)
 
-        assertMsg :: String -> String
-        assertMsg s = "`tokenize` failed for '" ++ s ++ "', output: " ++ show (tokenize s)
+        assertMsg :: String -> [Token] -> String
+        assertMsg s expected = "`tokenize` failed for '" ++ s ++ "'\n\t\t expected: " ++ (show expected) ++ "\n\t\t output: " ++ show (tokenize s)
 
         toTestTree :: (String, [Token]) -> TestTree
-        toTestTree input = testCase "" (assertBool (assertMsg $ fst input) (isEq input))
+        toTestTree input = testCase "" (assertBool (assertMsg (fst input) (snd input)) (isEq input))
