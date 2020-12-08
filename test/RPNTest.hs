@@ -27,7 +27,7 @@ rpnTests :: [TestTree]
 rpnTests = map toTestTree tests
   where
     filterInput :: String -> String
-    filterInput s = filter (\c -> not (elem c " \n\r\t")) s
+    filterInput s = filter (`notElem` " \n\r\t") s
 
     makeResult :: RPNResult -> [Token] -> [(Token, Token)]
     makeResult (Left tokens) expectedTokens = zip tokens expectedTokens
@@ -40,4 +40,4 @@ rpnTests = map toTestTree tests
     assertMsg s expected = "`rpn` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (rpn . tokenize $ s)
 
     toTestTree :: (String, [Token]) -> TestTree
-    toTestTree input = testCase ("RPN[" ++ (filterInput $ fst input) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
+    toTestTree input = testCase ("RPN[" ++ filterInput (fst input) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
