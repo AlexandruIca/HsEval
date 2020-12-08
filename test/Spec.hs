@@ -1,8 +1,8 @@
 module Main where
 
+import RPNTest
 import Test.Tasty
 import TokenizerTest
-import RPNTest
 
 allTests :: TestTree
 allTests = testGroup " All tests! " [testGroup "TokenizerTest" tokenizerTests, testGroup "RPNTest" rpnTests]

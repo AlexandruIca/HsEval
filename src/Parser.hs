@@ -54,6 +54,7 @@ isRParen RParen = True
 isRParen _ = False
 
 type Stack = [Token]
+
 type RPNResult = TokenizerResult
 
 shuntingYard :: Stack -> Stack -> Stack -> Stack
