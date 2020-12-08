@@ -40,7 +40,7 @@ tokenize expr = reverse (consumeInput [] expr)
     parseInt :: Double -> String -> (Double, String)
     parseInt currentNumber [] = (currentNumber, [])
     parseInt currentNumber (next : peek)
-      | isDigit next = parseInt (currentNumber * 10 + fromIntegral ((ord next) - (ord '0'))) peek
+      | isDigit next = parseInt (currentNumber * 10 + fromIntegral (ord next - ord '0')) peek
       | otherwise = (currentNumber, next : peek)
 
     consumeInput :: [Token] -> String -> [Token]
