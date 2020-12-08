@@ -52,6 +52,7 @@ isRParen RParen = True
 isRParen _ = False
 
 type Stack = [Token]
+type RPNResult = TokenizerResult
 
 shuntingYard :: Stack -> Stack -> Stack -> Stack
 shuntingYard [] [] result = result
@@ -70,11 +71,15 @@ shuntingYard (tok : toks) operators result
     (op : ops) -> shuntingYard (tok : toks) ops (op : result)
 
 -- Reverse Polish Notation
-rpn :: Stack -> Stack
-rpn tokens = reverse $ shuntingYard tokens [] []
+rpn :: TokenizerResult -> RPNResult
+rpn (Left tokens) = Left $ reverse $ shuntingYard tokens [] []
+rpn (Right err) = Right err
 
-interpret :: [Token] -> Double
-interpret tokens = interpret' [] tokens 0
+type InterpreterResult = Either Double String
+
+interpret :: RPNResult -> InterpreterResult
+interpret (Right err) = Right err
+interpret (Left tokens) = interpret' [] tokens 0
   where
     takeAllButLast2 :: [a] -> [a]
     takeAllButLast2 lst = take (length lst - 2) lst
@@ -92,15 +97,15 @@ interpret tokens = interpret' [] tokens 0
     processOperation Pow (a, b) = a ** b
     processOperation _ _ = error "Unexpected token in `processOperation` when interpreting"
 
-    interpret' :: [Double] -> Stack -> Double -> Double
-    interpret' _ [] x = x
+    interpret' :: [Double] -> Stack -> Double -> InterpreterResult
+    interpret' _ [] x = Left x
     interpret' acc (tok : toks) result = case tok of
       Number n -> interpret' (acc ++ [n]) toks result
-      LParen -> error "Unexpected '(' token in `interpret'`"
-      RParen -> error "Unexpected ')' token in `interpret'`"
+      LParen -> Right "Unexpected '(' token in `interpret'`"
+      RParen -> Right "Unexpected ')' token in `interpret'`"
       _ ->
         let res = processOperation tok (takeLast2 acc)
          in interpret' (takeAllButLast2 acc ++ [res]) toks res
 
-evalPostfix :: String -> Double
+evalPostfix :: String -> InterpreterResult
 evalPostfix expression = interpret (rpn . tokenize $ expression)

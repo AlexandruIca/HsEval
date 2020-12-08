@@ -48,8 +48,12 @@ tests =
 tokenizerTests :: [TestTree]
 tokenizerTests = map toTestTree tests
   where
+    makeTokenList :: TokenizerResult -> [Token] -> [(Token, Token)]
+    makeTokenList (Left tokens) expectedTokens = zip tokens expectedTokens
+    makeTokenList (Right err) expectedTokens = [(Number 0.0, Pow)]
+
     isEq :: (String, [Token]) -> Bool
-    isEq (s, tokens) = all (uncurry (==)) (zip (tokenize s) tokens)
+    isEq (s, tokens) = all (uncurry (==)) (makeTokenList (tokenize s) tokens)
 
     assertMsg :: String -> [Token] -> String
     assertMsg s expected = "`tokenize` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (tokenize s)

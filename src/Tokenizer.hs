@@ -1,6 +1,7 @@
 module Tokenizer
   ( Token (Number, LParen, RParen, Plus, Minus, Mult, Div, Pow),
     tokenize,
+    TokenizerResult,
   )
 where
 
@@ -28,9 +29,16 @@ instance Eq Token where
   (Number _) == (Number _) = True
   _ == _ = False
 
-tokenize :: String -> [Token]
-tokenize expr = reverse (consumeInput [] expr)
+type ErrorMessage = String
+type TokenizerResult = Either [Token] ErrorMessage
+
+tokenize :: String -> TokenizerResult
+tokenize expr = rev (consumeInput [] expr)
   where
+    rev :: TokenizerResult -> TokenizerResult
+    rev (Left tokens) = Left $ reverse tokens
+    rev (Right err) = Right err
+
     isDigit :: Char -> Bool
     isDigit c = c `elem` "0123456789"
 
@@ -43,8 +51,8 @@ tokenize expr = reverse (consumeInput [] expr)
       | isDigit next = parseInt (currentNumber * 10 + fromIntegral (ord next - ord '0')) peek
       | otherwise = (currentNumber, next : peek)
 
-    consumeInput :: [Token] -> String -> [Token]
-    consumeInput tok [] = tok
+    consumeInput :: [Token] -> String -> TokenizerResult
+    consumeInput tok [] = Left tok
     consumeInput tok (current : next)
       | isDigit current =
         let (num, rest) = parseInt (read [current] :: Double) next
@@ -57,4 +65,4 @@ tokenize expr = reverse (consumeInput [] expr)
       | current == '/' = consumeInput (Div : tok) next
       | current == '^' = consumeInput (Pow : tok) next
       | isWhitespace current = consumeInput tok next
-      | otherwise = error $ "Unexpected token: '" ++ [current] ++ "'"
+      | otherwise = Right $ "Unexpected token: '" ++ [current] ++ "'"
