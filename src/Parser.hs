@@ -101,7 +101,8 @@ interpret (Left tokens) = interpret' [] tokens 0
     processOperation _ _ = error "Unexpected token in `processOperation` when interpreting"
 
     interpret' :: [Double] -> Stack -> Double -> InterpreterResult
-    interpret' _ [] x = Left x
+    interpret' [] [] x = Left x
+    interpret' (x : _) [] _ = Left x
     interpret' acc (tok : toks) result = case tok of
       Number n -> interpret' (acc ++ [n]) toks result
       LParen -> Right "Unexpected '(' token in `interpret'`"
