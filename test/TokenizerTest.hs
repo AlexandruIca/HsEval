@@ -11,6 +11,7 @@ tests :: [(String, [Token])]
 tests =
   [ ("", []),
     ("  ", []),
+    ("\n\t\r ", []),
     ("+", [Plus]),
     ("-", [Minus]),
     ("/", [Div]),
@@ -50,7 +51,7 @@ tokenizerTests = map toTestTree tests
   where
     makeTokenList :: TokenizerResult -> [Token] -> [(Token, Token)]
     makeTokenList (Left tokens) expectedTokens = zip tokens expectedTokens
-    makeTokenList (Right err) expectedTokens = [(Number 0.0, Pow)]
+    makeTokenList (Right _) _ = [(Number 0.0, Pow)]
 
     isEq :: (String, [Token]) -> Bool
     isEq (s, tokens) = all (uncurry (==)) (makeTokenList (tokenize s) tokens)
