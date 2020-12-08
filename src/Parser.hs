@@ -82,7 +82,7 @@ type InterpreterResult = Either Double String
 
 interpret :: RPNResult -> InterpreterResult
 interpret (Right err) = Right err
-interpret (Left tokens) = interpret' [] tokens 0
+interpret (Left tokens) = interpret' [] tokens (Left 0)
   where
     takeAllButLast2 :: [a] -> [a]
     takeAllButLast2 lst = take (length lst - 2) lst
@@ -92,16 +92,27 @@ interpret (Left tokens) = interpret' [] tokens 0
       let toConvert = reverse $ take 2 (reverse lst)
        in (head toConvert, last toConvert)
 
-    processOperation :: Token -> (Double, Double) -> Double
-    processOperation Plus (a, b) = a + b
-    processOperation Minus (a, b) = a - b
-    processOperation Mult (a, b) = a * b
-    processOperation Div (a, b) = a / b
-    processOperation Pow (a, b) = a ** b
-    processOperation _ _ = error "Unexpected token in `processOperation` when interpreting"
+    processOperation :: Token -> (Double, Double) -> InterpreterResult
+    processOperation Plus (a, b) = Left $ a + b
+    processOperation Minus (a, b) = Left $ a - b
+    processOperation Mult (a, b) = Left $ a * b
+    processOperation Div (a, b) =
+      if b /= 0
+        then Left $ a / b
+        else Right "Divided by 0!"
+    processOperation Pow (a, b) =
+      if a == 0 && b == 0
+        then Right "Encountered 0^0!"
+        else Left $ a ** b
+    processOperation _ _ = Right "Unexpected token in `processOperation` when interpreting"
 
-    interpret' :: [Double] -> Stack -> Double -> InterpreterResult
-    interpret' [] [] x = Left x
+    fakeResult :: InterpreterResult -> Double
+    fakeResult (Left x) = x
+    fakeResult (Right _) = 1.0
+
+    interpret' :: [Double] -> Stack -> InterpreterResult -> InterpreterResult
+    interpret' _ _ (Right err) = Right err
+    interpret' [] [] (Left x) = Left x
     interpret' (x : _) [] _ = Left x
     interpret' acc (tok : toks) result = case tok of
       Number n -> interpret' (acc ++ [n]) toks result
@@ -109,7 +120,7 @@ interpret (Left tokens) = interpret' [] tokens 0
       RParen -> Right "Unexpected ')' token in `interpret'`"
       _ ->
         let res = processOperation tok (takeLast2 acc)
-         in interpret' (takeAllButLast2 acc ++ [res]) toks res
+         in interpret' (takeAllButLast2 acc ++ [fakeResult res]) toks res
 
 evalPostfix :: String -> InterpreterResult
 evalPostfix expression = interpret (rpn . tokenize $ expression)
