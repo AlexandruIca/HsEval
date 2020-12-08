@@ -63,4 +63,4 @@ tokenizerTests = map toTestTree tests
     assertMsg s expected = "`tokenize` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (tokenize s)
 
     toTestTree :: (String, [Token]) -> TestTree
-    toTestTree input = testCase ("Tokenizer[" ++ (filterInput (fst input)) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
+    toTestTree input = testCase ("Tokenizer[" ++ filterInput (fst input) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
