@@ -13,9 +13,14 @@ tests =
   [ ("", []),
     ("   ", []),
     ("\n\t\r ", []),
+    ("100", [Number 100.0]),
     ("1+2", [Number 1.0, Number 2.0, Plus]),
     ("3 * 4 / 2 ^ 7", [Number 3.0, Number 4.0, Mult, Number 2.0, Number 7.0, Pow, Div]),
-    ("(3 * 4 / 2) ^ 7", [Number 3.0, Number 4.0, Mult, Number 2.0, Div, Number 7.0, Pow])
+    ("(3 * 4 / 2) ^ 7", [Number 3.0, Number 4.0, Mult, Number 2.0, Div, Number 7.0, Pow]),
+    ("2 ^ 4 ^ 3", [Number 2.0, Number 4.0, Number 3.0, Pow, Pow]),
+    ("2 * 4 * 3", [Number 2.0, Number 4.0, Mult, Number 3.0, Mult]),
+    ("2 ^ 4 * 3", [Number 2.0, Number 4.0, Pow, Number 3.0, Mult]),
+    ("2 ^ 4 - 3", [Number 2.0, Number 4.0, Pow, Number 3.0, Minus])
   ]
 
 rpnTests :: [TestTree]
