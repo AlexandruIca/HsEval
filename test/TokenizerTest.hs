@@ -49,7 +49,7 @@ tokenizerTests :: [TestTree]
 tokenizerTests = map toTestTree tests
   where
     isEq :: (String, [Token]) -> Bool
-    isEq (s, tokens) = and $ map (\(a, b) -> a == b) (zip (tokenize s) tokens)
+    isEq (s, tokens) = all (uncurry (==)) (zip (tokenize s) tokens)
 
     assertMsg :: String -> [Token] -> String
     assertMsg s expected = "`tokenize` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (tokenize s)
