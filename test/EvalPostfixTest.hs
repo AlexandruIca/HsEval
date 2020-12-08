@@ -6,7 +6,6 @@ where
 import Parser
 import Test.Tasty
 import Test.Tasty.HUnit (assertBool, testCase)
-import Tokenizer
 
 tests :: [(String, Double)]
 tests =
