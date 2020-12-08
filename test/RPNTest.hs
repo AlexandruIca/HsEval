@@ -5,7 +5,7 @@ where
 
 import Parser
 import Test.Tasty
-import Test.Tasty.HUnit ( testCase, assertBool )
+import Test.Tasty.HUnit (assertBool, testCase)
 import Tokenizer
 
 tests :: [(String, [Token])]
@@ -14,21 +14,25 @@ tests =
     ("   ", []),
     ("\n\t\r ", []),
     ("1+2", [Number 1.0, Number 2.0, Plus]),
-    ("3 * 4 / 2 ^ 7", [Number 3.0, Number 4.0, Mult, Number 2.0, Number 7.0, Pow, Div])
+    ("3 * 4 / 2 ^ 7", [Number 3.0, Number 4.0, Mult, Number 2.0, Number 7.0, Pow, Div]),
+    ("(3 * 4 / 2) ^ 7", [Number 3.0, Number 4.0, Mult, Number 2.0, Div, Number 7.0, Pow])
   ]
 
 rpnTests :: [TestTree]
 rpnTests = map toTestTree tests
-    where
-        makeResult :: RPNResult -> [Token] -> [(Token, Token)]
-        makeResult (Left tokens) expectedTokens = zip tokens expectedTokens
-        makeResult (Right _) _ = [(Number 0.0, Pow)]
+  where
+    filterInput :: String -> String
+    filterInput s = filter (\c -> not (elem c " \n\r\t")) s
 
-        isEq :: (String, [Token]) -> Bool
-        isEq (s, tokens) = all (uncurry (==)) (makeResult (rpn . tokenize $ s) tokens)
+    makeResult :: RPNResult -> [Token] -> [(Token, Token)]
+    makeResult (Left tokens) expectedTokens = zip tokens expectedTokens
+    makeResult (Right _) _ = [(Number 0.0, Pow)]
 
-        assertMsg :: String -> [Token] -> String
-        assertMsg s expected = "`rpn` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (rpn . tokenize $ s)
+    isEq :: (String, [Token]) -> Bool
+    isEq (s, tokens) = all (uncurry (==)) (makeResult (rpn . tokenize $ s) tokens)
 
-        toTestTree :: (String, [Token]) -> TestTree
-        toTestTree input = testCase "" (assertBool (uncurry assertMsg input) (isEq input))
+    assertMsg :: String -> [Token] -> String
+    assertMsg s expected = "`rpn` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (rpn . tokenize $ s)
+
+    toTestTree :: (String, [Token]) -> TestTree
+    toTestTree input = testCase ("RPN[" ++ (filterInput $ fst input) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))

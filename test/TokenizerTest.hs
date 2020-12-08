@@ -4,7 +4,7 @@ module TokenizerTest
 where
 
 import Test.Tasty
-import Test.Tasty.HUnit ( testCase, assertBool )
+import Test.Tasty.HUnit (assertBool, testCase)
 import Tokenizer
 
 tests :: [(String, [Token])]
@@ -49,6 +49,9 @@ tests =
 tokenizerTests :: [TestTree]
 tokenizerTests = map toTestTree tests
   where
+    filterInput :: String -> String
+    filterInput s = filter (\c -> not (elem c " \n\r\t")) s
+
     makeTokenList :: TokenizerResult -> [Token] -> [(Token, Token)]
     makeTokenList (Left tokens) expectedTokens = zip tokens expectedTokens
     makeTokenList (Right _) _ = [(Number 0.0, Pow)]
@@ -60,4 +63,4 @@ tokenizerTests = map toTestTree tests
     assertMsg s expected = "`tokenize` failed for '" ++ s ++ "'\n\t\t expected: " ++ show expected ++ "\n\t\t output: " ++ show (tokenize s)
 
     toTestTree :: (String, [Token]) -> TestTree
-    toTestTree input = testCase "" (assertBool (uncurry assertMsg input) (isEq input))
+    toTestTree input = testCase ("Tokenizer[" ++ (filterInput (fst input)) ++ "]") (assertBool (uncurry assertMsg input) (isEq input))
