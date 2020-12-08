@@ -1,2 +1,9 @@
+module Main where
+
+import Test.Tasty
+import Test.Tasty.HUnit
+
+import TokenizerTest
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do defaultMain (testGroup "Tokenizer tests" tokenizerTests)

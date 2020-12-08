@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 85236a2d66deb8d88ba2a96e51e1ecd913aff7502b34abcee892cbbfe54cbf52
+-- hash: a6bb766e83de1e42d24cdfb76c1b983d9203581308e9c39a4234f2233e7a89ea
 
 name:           HsEval
 version:        0.1.0.0
@@ -53,6 +53,7 @@ test-suite HsEval-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      TokenizerTest
       Paths_HsEval
   hs-source-dirs:
       test
@@ -60,4 +61,6 @@ test-suite HsEval-test
   build-depends:
       HsEval
     , base >=4.7 && <5
+    , tasty
+    , tasty-hunit
   default-language: Haskell2010
