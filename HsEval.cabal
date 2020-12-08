@@ -55,6 +55,7 @@ test-suite HsEval-test
   other-modules:
       TokenizerTest
       RPNTest
+      EvalPostfixTest
       Paths_HsEval
   hs-source-dirs:
       test
