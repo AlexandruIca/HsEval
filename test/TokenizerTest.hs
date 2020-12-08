@@ -10,6 +10,7 @@ import Tokenizer
 tests :: [(String, [Token])]
 tests =
     [
+    ("(", [RParen]),
     ("", []),
     ("  ", []),
     ("+", [Plus]),
@@ -33,19 +34,8 @@ tests =
 tokenizerTests :: [TestTree]
 tokenizerTests = map toTestTree tests
     where
-        eq :: Token -> Token -> Bool
-        eq LParen LParen = True
-        eq RParen RParen = True
-        eq Plus Plus = True
-        eq Minus Minus = True
-        eq Mult Mult = True
-        eq Div Div = True
-        eq Pow Pow = True
-        eq (Number _) (Number _) = True
-        eq _ _ = False
-
         isEq :: (String, [Token]) -> Bool
-        isEq (s, tokens) = and $ map (\(a, b) -> eq a b) (zip (tokenize s) tokens)
+        isEq (s, tokens) = and $ map (\(a, b) -> a == b) (zip (tokenize s) tokens)
 
         assertMsg :: String -> String
         assertMsg s = "`tokenize` failed for '" ++ s ++ "', output: " ++ show (tokenize s)

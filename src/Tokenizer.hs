@@ -16,6 +16,17 @@ data Token
     | Pow
     deriving Show
 
+instance Eq Token where
+    LParen == LParen = True
+    RParen == RParen = True
+    Plus == Plus = True
+    Minus == Minus = True
+    Mult == Mult = True
+    Div == Div = True
+    Pow == Pow = True
+    (Number _) == (Number _) = True
+    _ == _ = False
+
 tokenize :: String -> [Token]
 tokenize expr = reverse (consumeInput [] expr)
     where
