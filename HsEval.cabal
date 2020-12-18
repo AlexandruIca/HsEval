@@ -29,6 +29,7 @@ library
   exposed-modules:
       Parser
       Tokenizer
+      RecursiveDescent
   other-modules:
       Paths_HsEval
   hs-source-dirs:
@@ -56,6 +57,7 @@ test-suite HsEval-test
       TokenizerTest
       RPNTest
       EvalPostfixTest
+      RecursiveDescentTest
       Paths_HsEval
   hs-source-dirs:
       test
