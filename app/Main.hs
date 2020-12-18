@@ -1,18 +1,32 @@
 module Main where
 
+import Control.Monad
 import Parser
 import RecursiveDescent
+import System.IO
 import Tokenizer
 
-expression :: String
-expression = "(1 + 256 - 3 / 4 * 5 + 5^(2^1))"
+prompt :: String -> IO String
+prompt str = do
+  putStr str
+  hFlush stdout
+  getLine
 
-expression2 :: String
-expression2 = "sin(asin(0)) + sqrt(5 * exp(2))"
+prettyPrint :: Show a => Either a String -> String
+prettyPrint (Right r) = r
+prettyPrint (Left l) = show l
+
+replPostfix :: IO ()
+replPostfix = do
+  str <- prompt "eval> "
+  print . prettyPrint $ evalPostfix str
+
+replCalc :: IO ()
+replCalc = do
+  str <- prompt "eval> "
+  print . prettyPrint $ calc str
 
 main :: IO ()
 main = do
-  putStrLn $ "Lexing for: " ++ expression ++ "\n" ++ show (tokenize expression)
-  putStrLn $ "Postfix: " ++ show ((rpn . tokenize) expression)
-  putStrLn $ "Eval for " ++ expression ++ " = " ++ show (evalPostfix expression)
-  putStrLn $ "Calc for " ++ expression2 ++ " = " ++ show (calc expression2)
+  putStrLn "Press Ctrl+C to exit"
+  forever replCalc
