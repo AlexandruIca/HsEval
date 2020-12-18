@@ -9,7 +9,7 @@ The other one can parse functions:
 ```hs
 calc "sqrt(4 * 4)" -> 4.0
 ```
-`calc` is a [recursive descent]() parser implemented in [RecursiveDescent.hs](src/RecursiveDescent.hs) that turns the input string into an AST which is then evaluated recursively.
+`calc` is a [recursive descent](https://en.wikipedia.org/wiki/Recursive_descent_parser) parser implemented in [RecursiveDescent.hs](src/RecursiveDescent.hs) that turns the input string into an AST which is then evaluated recursively.
 
 # Build
 Make sure you have [stack](https://docs.haskellstack.org/en/stable/README/) installed.
