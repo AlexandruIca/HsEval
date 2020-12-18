@@ -1,3 +1,5 @@
+![HsEval](https://github.com/AlexandruIca/HsEval/workflows/HsEval/badge.svg)
+
 # HsEval
 Two simple parser for simple expressions. One can do:
 ```hs
