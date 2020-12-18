@@ -2,6 +2,7 @@ module Main where
 
 import EvalPostfixTest
 import RPNTest
+import RecursiveDescentTest
 import Test.Tasty
 import TokenizerTest
 
@@ -11,7 +12,8 @@ allTests =
     " All tests! "
     [ testGroup "TokenizerTest" tokenizerTests,
       testGroup "RPNTest" rpnTests,
-      testGroup "EvalPostfixTest" evalPostfixTests
+      testGroup "EvalPostfixTest" evalPostfixTests,
+      testGroup "RecursiveDescentTest" calcTests
     ]
 
 main :: IO ()
