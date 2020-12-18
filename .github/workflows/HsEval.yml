@@ -1,0 +1,30 @@
+name: HsEval
+
+on:
+    push:
+        branches: [ master ]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        runs-on: ${{ matrix.os }}
+        steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup stack, ghc, cabal
+          uses: actions/setup-haskell@v1
+          with:
+              ghc-version: latest
+              cabal-version: latest
+              enable-stack: true
+              stack-version: latest
+
+        - name: Build project
+          run: |
+              stack build
+
+        - name: Run tests
+          run: |
+              stack test
