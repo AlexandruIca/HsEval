@@ -30,6 +30,7 @@ instance Eq Token where
   _ == _ = False
 
 type ErrorMessage = String
+
 type TokenizerResult = Either [Token] ErrorMessage
 
 tokenize :: String -> TokenizerResult
